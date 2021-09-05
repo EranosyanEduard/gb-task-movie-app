@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">GB-My-App</string>
+
+    <!--  My strings  -->
+
+    <!--  Main fragment  -->
+    <string name="title_for_main_fragment">Сейчас в кино</string>
 </resources>
