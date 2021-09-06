@@ -8,7 +8,8 @@
     <dimen name="fragment_h1_mb">16dp</dimen>
 
     <!--  Main fragment  -->
-    <dimen name="main_fragment_li_gap">16dp</dimen>
+    <dimen name="main_fragment_li_gap">8dp</dimen>
     <dimen name="main_fragment_li_height">160dp</dimen>
     <dimen name="main_fragment_li_img_width">120dp</dimen>
+    <dimen name="main_fragment_li_guideline">136dp</dimen>
 </resources>

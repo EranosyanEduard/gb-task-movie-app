@@ -3,32 +3,39 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/main_fragment_li_height">
+    android:layout_height="@dimen/main_fragment_li_height"
+    android:padding="@dimen/main_fragment_li_gap">
 
     <!--
-        Movie as list item:
+        View template:
 
-        1. image;
-        2. title;
-        3. original title;
-        4. description;
+        image guideline title         title
+        image guideline originalTitle originalTitle
+        image guideline release_date  voteAverage
     -->
     <ImageView
         android:id="@+id/movie_image"
         android:layout_width="@dimen/main_fragment_li_img_width"
         android:layout_height="match_parent"
-        android:layout_marginEnd="@dimen/main_fragment_li_gap"
+        android:background="@color/design_default_color_secondary"
         android:contentDescription="@string/movie_image_content_description"
         android:scaleType="fitCenter"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/main_fragment_li_guideline" />
+
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/movie_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/main_fragment_li_gap"
-        app:layout_constraintStart_toEndOf="@+id/movie_image"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/guideline"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Название фильма" />
 
@@ -36,19 +43,34 @@
         android:id="@+id/movie_title_original"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/main_fragment_li_gap"
-        app:layout_constraintStart_toEndOf="@+id/movie_image"
+        android:layout_marginTop="@dimen/main_fragment_li_gap"
+        android:textStyle="italic"
+        app:layout_constraintStart_toEndOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@id/movie_title"
         tools:text="Оригинальное название фильма" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/movie_description"
+        android:id="@+id/movie_release_date"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/guideline"
+        tools:text="Дата выхода" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/icon_star"
+        android:src="@drawable/ic_baseline_star_rate_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/movie_vote_average" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/movie_vote_average"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/movie_image"
-        app:layout_constraintTop_toBottomOf="@+id/movie_title_original"
-        tools:text="Краткое содержание фильма" />
+        tools:text="5.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
