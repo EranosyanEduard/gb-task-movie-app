@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--  Fragment  -->
     <dimen name="fragment_padding_default">16dp</dimen>
 
     <!--  Fragment heading 1  -->
     <dimen name="fragment_h1_size">16sp</dimen>
     <dimen name="fragment_h1_mb">16dp</dimen>
+
+    <!--  Main fragment  -->
+    <dimen name="main_fragment_li_gap">16dp</dimen>
+    <dimen name="main_fragment_li_height">160dp</dimen>
+    <dimen name="main_fragment_li_img_width">120dp</dimen>
 </resources>
