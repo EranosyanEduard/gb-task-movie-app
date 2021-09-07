@@ -3,20 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/main_fragment_li_height"
+    android:layout_height="match_parent"
     android:padding="@dimen/main_fragment_li_gap">
 
     <!--
         View template:
 
-        image guideline title         -    -
+        image           title         -    -
         image guideline originalTitle -    -
-        image guideline release_date  icon voteAverage
+        image           release_date  icon voteAverage
+        guideline
     -->
     <ImageView
         android:id="@+id/movie_image"
         android:layout_width="@dimen/main_fragment_li_img_width"
-        android:layout_height="match_parent"
+        android:layout_height="@dimen/main_fragment_li_height"
         android:background="@color/design_default_color_secondary"
         android:contentDescription="@string/movie_image_content_description"
         android:scaleType="fitCenter"
@@ -24,18 +25,25 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
+        android:id="@+id/guideline_direction_vertical"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:orientation="vertical"
         app:layout_constraintGuide_begin="@dimen/main_fragment_li_guideline" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_direction_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="@dimen/main_fragment_li_height" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/movie_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/guideline"
+        app:layout_constraintStart_toEndOf="@+id/guideline_direction_vertical"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Название фильма" />
 
@@ -45,7 +53,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/main_fragment_li_gap"
         android:textStyle="italic"
-        app:layout_constraintStart_toEndOf="@+id/guideline"
+        app:layout_constraintStart_toEndOf="@+id/guideline_direction_vertical"
         app:layout_constraintTop_toBottomOf="@id/movie_title"
         tools:text="Оригинальное название фильма" />
 
@@ -53,8 +61,8 @@
         android:id="@+id/movie_release_date"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/guideline"
+        app:layout_constraintBottom_toTopOf="@id/guideline_direction_horizontal"
+        app:layout_constraintStart_toEndOf="@+id/guideline_direction_vertical"
         tools:text="Дата выхода" />
 
     <ImageView
@@ -62,15 +70,24 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/icon_star"
         android:src="@drawable/ic_baseline_star_rate_24"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/guideline_direction_horizontal"
         app:layout_constraintEnd_toStartOf="@+id/movie_vote_average" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/movie_vote_average"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/guideline_direction_horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="5.0" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/movie_overview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/main_fragment_li_gap"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_direction_horizontal" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

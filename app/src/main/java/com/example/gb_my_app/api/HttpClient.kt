@@ -42,12 +42,33 @@ class HttpClient {
                     response: Response<AppApiResponse>,
                 ) {
                     val movieList = response.body()?.movieList ?: emptyList()
-
                     responseLiveData.value = movieList
                 }
 
                 override fun onFailure(call: Call<AppApiResponse>, t: Throwable) {
-                    Log.d(TAG_EXCEPTION, EXCEPTION_MESSAGE, t)
+                    val apiName = "fetchMovieListNowPlaying"
+                    Log.d(TAG_EXCEPTION, "$apiName: $EXCEPTION_MESSAGE", t)
+                }
+            })
+
+        return responseLiveData
+    }
+
+    fun fetchMovie(movieId: Int): LiveData<Movie> {
+        val responseLiveData = MutableLiveData<Movie>()
+
+        appApi
+            .fetchMovie(movieId)
+            .enqueue(object : Callback<Movie> {
+
+                override fun onResponse(call: Call<Movie>, response: Response<Movie>) {
+                    val movie = response.body() ?: Movie()
+                    responseLiveData.value = movie
+                }
+
+                override fun onFailure(call: Call<Movie>, t: Throwable) {
+                    val apiName = "fetchMovie"
+                    Log.d(TAG_EXCEPTION, "$apiName: $EXCEPTION_MESSAGE", t)
                 }
             })
 

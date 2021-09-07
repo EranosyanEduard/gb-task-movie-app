@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:layout_margin="@dimen/fragment_padding_default"
     android:orientation="vertical"
-    tools:context=".ui.main.MainFragment">
+    tools:context=".ui.view.MainFragment">
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/progress_indicator"

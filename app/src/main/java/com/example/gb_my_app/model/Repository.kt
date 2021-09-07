@@ -28,4 +28,6 @@ class Repository private constructor(context: Context) {
     private val httpClient: HttpClient = HttpClient()
 
     fun getMovieListNowPlaying(): LiveData<List<Movie>> = httpClient.fetchMovieListNowPlaying()
+
+    fun getMovieByID(movieId: Int): LiveData<Movie> = httpClient.fetchMovie(movieId)
 }
