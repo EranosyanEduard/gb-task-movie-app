@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gb_my_app.R
 import com.example.gb_my_app.model.Movie
-import com.example.gb_my_app.utils.MyHelpers
+import com.example.gb_my_app.utils.convertToHumanDate
 
 class MovieAdapter(
     private val movieList: List<Movie>,
@@ -22,8 +22,9 @@ class MovieAdapter(
                 findViewById<TextView>(R.id.movie_title).text = movie.title
                 findViewById<TextView>(R.id.movie_title_original).text = movie.originalTitle
 
-                findViewById<TextView>(R.id.movie_release_date).text = MyHelpers
-                    .convertISODateToHumanDate(movie.releaseDate)
+                findViewById<TextView>(R.id.movie_release_date).text = movie
+                    .releaseDate
+                    .convertToHumanDate()
                     .let { "Релиз: $it" }
 
                 findViewById<TextView>(R.id.movie_vote_average).text = "${movie.voteAverage}"

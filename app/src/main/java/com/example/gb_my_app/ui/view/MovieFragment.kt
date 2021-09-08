@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.gb_my_app.databinding.MovieFragmentBinding
 import com.example.gb_my_app.model.Movie
-import com.example.gb_my_app.utils.MyHelpers
+import com.example.gb_my_app.utils.convertToHumanDate
 
 private const val ARG_MOVIE_ID = "MOVIE_ID"
 
@@ -65,8 +65,9 @@ class MovieFragment : Fragment() {
             movieVoteAverage.text = "${movie.voteAverage}"
             movieOverview.text = movie.overview
 
-            movieReleaseDate.text = MyHelpers
-                .convertISODateToHumanDate(movie.releaseDate)
+            movieReleaseDate.text = movie
+                .releaseDate
+                .convertToHumanDate()
                 .let { "Релиз: $it" }
         }
 

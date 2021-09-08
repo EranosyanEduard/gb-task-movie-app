@@ -11,7 +11,7 @@ interface AppApi {
             + "?api_key=c7dbc5f1d33bf032496be926b19514e6"
             + "&language=ru-RU"
             + "&region=RU")
-    fun fetchMovieListNowPlaying(): Call<AppApiResponse>
+    fun fetchMovieListNowPlaying(): Call<AppApiResponse.FetchMovieListNowPlaying>
 
     @GET("{movieID}"
             + "?api_key=c7dbc5f1d33bf032496be926b19514e6"

@@ -7,8 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.gb_my_app.AppState
 import com.example.gb_my_app.databinding.MainFragmentBinding
+import com.example.gb_my_app.utils.toVisibility
 import com.example.gb_my_app.viewmodel.MainViewModel
+import com.google.android.material.snackbar.Snackbar
 
 class MainFragment : Fragment() {
 
@@ -23,7 +26,9 @@ class MainFragment : Fragment() {
         fun newInstance() = MainFragment()
     }
 
-    private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by lazy {
+        ViewModelProvider(this).get(MainViewModel::class.java)
+    }
 
     private var callbacks: Callbacks? = null
 
@@ -50,11 +55,11 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        viewModel
+            .getMovieListLiveData()
+            .observe(viewLifecycleOwner, { renderUI(it) })
 
-        viewModel.movieListLiveData.observe(viewLifecycleOwner, {
-            fragmentBinding.movieRecyclerView.adapter = MovieAdapter(it, callbacks)
-        })
+        viewModel.getMovieList(viewLifecycleOwner)
     }
 
     override fun onDetach() {
@@ -65,5 +70,31 @@ class MainFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         fragmentBindingRef = null
+    }
+
+    private fun renderUI(appState: AppState) {
+        when (appState) {
+            is AppState.Failure -> fragmentBinding.apply {
+                progressIndicator toVisibility View.VISIBLE
+
+                Snackbar
+                    .make(mainWrapper, "Ошибка", Snackbar.LENGTH_INDEFINITE)
+                    .setAction("Перезагрузить") {
+                        viewModel.getMovieList(viewLifecycleOwner)
+                    }
+                    .show()
+            }
+            is AppState.Loading -> {
+                fragmentBinding.progressIndicator toVisibility View.VISIBLE
+            }
+            is AppState.Success -> fragmentBinding.apply {
+                val movieList = (appState as AppState.MovieListFetched).movieList
+
+                movieRecyclerView.adapter = MovieAdapter(movieList, callbacks)
+
+                progressIndicator toVisibility View.INVISIBLE
+                mainWrapper toVisibility View.VISIBLE
+            }
+        }
     }
 }

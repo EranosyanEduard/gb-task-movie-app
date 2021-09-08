@@ -30,22 +30,30 @@ class HttpClient {
         appApi = retrofit.create(AppApi::class.java)
     }
 
+    /**
+     * Извлечь список фильмов категории "Сейчас в кино" из удаленного источника.
+     *
+     * @return список фильмов, обернутый в LiveData.
+     */
     fun fetchMovieListNowPlaying(): LiveData<List<Movie>> {
         val responseLiveData = MutableLiveData<List<Movie>>()
 
         appApi
             .fetchMovieListNowPlaying()
-            .enqueue(object : Callback<AppApiResponse> {
+            .enqueue(object : Callback<AppApiResponse.FetchMovieListNowPlaying> {
 
                 override fun onResponse(
-                    call: Call<AppApiResponse>,
-                    response: Response<AppApiResponse>,
+                    call: Call<AppApiResponse.FetchMovieListNowPlaying>,
+                    response: Response<AppApiResponse.FetchMovieListNowPlaying>,
                 ) {
                     val movieList = response.body()?.movieList ?: emptyList()
                     responseLiveData.value = movieList
                 }
 
-                override fun onFailure(call: Call<AppApiResponse>, t: Throwable) {
+                override fun onFailure(
+                    call: Call<AppApiResponse.FetchMovieListNowPlaying>,
+                    t: Throwable,
+                ) {
                     val apiName = "fetchMovieListNowPlaying"
                     Log.d(TAG_EXCEPTION, "$apiName: $EXCEPTION_MESSAGE", t)
                 }
@@ -54,6 +62,12 @@ class HttpClient {
         return responseLiveData
     }
 
+    /**
+     * Извлечь подробную информацию о фильме.
+     *
+     * @param movieId идентификатор фильма.
+     * @return фильм.
+     */
     fun fetchMovie(movieId: Int): LiveData<Movie> {
         val responseLiveData = MutableLiveData<Movie>()
 
