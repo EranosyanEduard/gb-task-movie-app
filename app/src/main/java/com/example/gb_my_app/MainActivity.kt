@@ -4,8 +4,14 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.gb_my_app.ui.view.MainFragment
 import com.example.gb_my_app.ui.view.MovieFragment
+import com.example.gb_my_app.utils.toVisibility
+import com.google.android.material.progressindicator.LinearProgressIndicator
 
 class MainActivity : AppCompatActivity(), MainFragment.Callbacks {
+
+    private val progressIndicator: LinearProgressIndicator by lazy {
+        findViewById(R.id.progress_indicator)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,5 +36,9 @@ class MainActivity : AppCompatActivity(), MainFragment.Callbacks {
             .replace(R.id.container, MovieFragment.newInstance(movieID))
             .addToBackStack(null)
             .commit()
+    }
+
+    override fun onShowProgress(visibilityMode: Int) {
+        progressIndicator toVisibility visibilityMode
     }
 }

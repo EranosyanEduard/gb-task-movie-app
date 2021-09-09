@@ -1,14 +1,18 @@
 package com.example.gb_my_app.ui.view
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.gb_my_app.AppState
 import com.example.gb_my_app.databinding.MovieFragmentBinding
-import com.example.gb_my_app.model.Movie
 import com.example.gb_my_app.utils.convertToHumanDate
+import com.example.gb_my_app.utils.showReloadAction
+import com.example.gb_my_app.utils.toVisibility
+import com.google.android.material.snackbar.Snackbar
 
 private const val ARG_MOVIE_ID = "MOVIE_ID"
 
@@ -22,25 +26,31 @@ class MovieFragment : Fragment() {
         }
     }
 
-    private lateinit var viewModel: MovieViewModel
+    private val viewModel: MovieViewModel by lazy {
+        ViewModelProvider(this).get(MovieViewModel::class.java)
+    }
 
     private var paramMovieID: Int? = null
 
-    // View binding.
-    private var fragmentBindingRef: MovieFragmentBinding? = null
+    private var callbacks: MainFragment.Callbacks? = null
 
-    private val fragmentBinding get() = fragmentBindingRef!!
+    // View binding.
+    private var viewBindingRef: MovieFragmentBinding? = null
+
+    private val viewBinding get() = viewBindingRef!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel = ViewModelProvider(this).get(MovieViewModel::class.java)
-
-        arguments?.let {
+        arguments?.also {
             paramMovieID = it.getInt(ARG_MOVIE_ID)
-
-            viewModel.getMovieById(paramMovieID)
         }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        // Here context is activity. Get access to activity functions.
+        callbacks = context as MainFragment.Callbacks
     }
 
     override fun onCreateView(
@@ -48,28 +58,54 @@ class MovieFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        fragmentBindingRef = MovieFragmentBinding.inflate(inflater, container, false)
-        return fragmentBinding.root
+        viewBindingRef = MovieFragmentBinding.inflate(inflater, container, false)
+        return viewBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.movieLiveData.observe(viewLifecycleOwner, { updateUI(it) })
+        viewModel
+            .getMovieLiveData()
+            .observe(viewLifecycleOwner, { updateUI(it) })
+
+        viewModel.getMovie(viewLifecycleOwner, paramMovieID)
     }
 
-    private fun updateUI(movie: Movie) {
-        fragmentBinding.apply {
-            movieTitle.text = movie.title
-            movieTitleOriginal.text = movie.originalTitle
-            movieVoteAverage.text = "${movie.voteAverage}"
-            movieOverview.text = movie.overview
+    override fun onDetach() {
+        super.onDetach()
+        callbacks = null
+    }
 
-            movieReleaseDate.text = movie
-                .releaseDate
-                .convertToHumanDate()
-                .let { "Релиз: $it" }
+    override fun onDestroy() {
+        super.onDestroy()
+        viewBindingRef = null
+    }
+
+    private fun updateUI(appState: AppState) {
+        when (appState) {
+            is AppState.Failure -> viewBinding.also { vb ->
+                callbacks?.onShowProgress(View.INVISIBLE)
+
+                Snackbar
+                    .make(vb.movieContainer, "Ошибка", Snackbar.LENGTH_INDEFINITE)
+                    .showReloadAction { viewModel.getMovie(viewLifecycleOwner, paramMovieID) }
+            }
+            is AppState.Loading -> callbacks?.onShowProgress(View.VISIBLE)
+            is AppState.Success -> viewBinding.also { vb ->
+                val movie = (appState as AppState.MovieFetched).movie
+
+                movie.apply {
+                    vb.movieTitle.text = title
+                    vb.movieTitleOriginal.text = originalTitle
+                    vb.movieVoteAverage.text = "$voteAverage"
+                    vb.movieOverview.text = overview
+                    vb.movieReleaseDate.text = releaseDate.convertToHumanDate().let { "Релиз: $it" }
+                }
+
+                callbacks?.onShowProgress(View.INVISIBLE)
+                vb.movieContainer toVisibility View.VISIBLE
+            }
         }
-
     }
 }

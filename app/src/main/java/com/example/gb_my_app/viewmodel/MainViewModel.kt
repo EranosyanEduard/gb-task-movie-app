@@ -1,6 +1,7 @@
 package com.example.gb_my_app.viewmodel
 
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.gb_my_app.AppState
@@ -12,7 +13,7 @@ class MainViewModel : ViewModel() {
 
     private val movieListLiveData: MutableLiveData<AppState> = MutableLiveData()
 
-    fun getMovieListLiveData() = movieListLiveData
+    fun getMovieListLiveData(): LiveData<AppState> = movieListLiveData
 
     fun getMovieList(lifecycleOwner: LifecycleOwner) = getMovieListNowPlaying(lifecycleOwner)
 
@@ -21,8 +22,8 @@ class MainViewModel : ViewModel() {
 
         repository
             .getMovieListNowPlaying()
-            .observe(lifecycleOwner, {
-                movieListLiveData.value = AppState.MovieListFetched(it)
+            .observe(lifecycleOwner, { movieList ->
+                movieListLiveData.value = AppState.MovieListFetched(movieList)
             })
     }
 }

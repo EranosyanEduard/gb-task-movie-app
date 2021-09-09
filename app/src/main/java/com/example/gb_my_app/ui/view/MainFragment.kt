@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.gb_my_app.AppState
 import com.example.gb_my_app.databinding.MainFragmentBinding
+import com.example.gb_my_app.utils.showReloadAction
 import com.example.gb_my_app.utils.toVisibility
 import com.example.gb_my_app.viewmodel.MainViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -20,6 +21,8 @@ class MainFragment : Fragment() {
      */
     interface Callbacks {
         fun onMovieSelected(movieID: Int)
+
+        fun onShowProgress(visibilityMode: Int)
     }
 
     companion object {
@@ -33,13 +36,13 @@ class MainFragment : Fragment() {
     private var callbacks: Callbacks? = null
 
     // View binding.
-    private var fragmentBindingRef: MainFragmentBinding? = null
+    private var viewBindingRef: MainFragmentBinding? = null
 
-    private val fragmentBinding get() = fragmentBindingRef!!
+    private val viewBinding get() = viewBindingRef!!
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        // Here context is activity.
+        // Here context is activity. Get access to activity functions.
         callbacks = context as Callbacks
     }
 
@@ -48,8 +51,8 @@ class MainFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        fragmentBindingRef = MainFragmentBinding.inflate(inflater, container, false)
-        return fragmentBinding.root
+        viewBindingRef = MainFragmentBinding.inflate(inflater, container, false)
+        return viewBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -69,31 +72,26 @@ class MainFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        fragmentBindingRef = null
+        viewBindingRef = null
     }
 
     private fun renderUI(appState: AppState) {
         when (appState) {
-            is AppState.Failure -> fragmentBinding.apply {
-                progressIndicator toVisibility View.VISIBLE
+            is AppState.Failure -> viewBinding.also { vb ->
+                callbacks?.onShowProgress(View.INVISIBLE)
 
                 Snackbar
-                    .make(mainWrapper, "Ошибка", Snackbar.LENGTH_INDEFINITE)
-                    .setAction("Перезагрузить") {
-                        viewModel.getMovieList(viewLifecycleOwner)
-                    }
-                    .show()
+                    .make(vb.main, "Ошибка", Snackbar.LENGTH_INDEFINITE)
+                    .showReloadAction { viewModel.getMovieList(viewLifecycleOwner) }
             }
-            is AppState.Loading -> {
-                fragmentBinding.progressIndicator toVisibility View.VISIBLE
-            }
-            is AppState.Success -> fragmentBinding.apply {
+            is AppState.Loading -> callbacks?.onShowProgress(View.VISIBLE)
+            is AppState.Success -> viewBinding.also { vb ->
                 val movieList = (appState as AppState.MovieListFetched).movieList
 
-                movieRecyclerView.adapter = MovieAdapter(movieList, callbacks)
+                vb.movieRecyclerView.adapter = MovieAdapter(movieList, callbacks)
 
-                progressIndicator toVisibility View.INVISIBLE
-                mainWrapper toVisibility View.VISIBLE
+                callbacks?.onShowProgress(View.INVISIBLE)
+                vb.main toVisibility View.VISIBLE
             }
         }
     }

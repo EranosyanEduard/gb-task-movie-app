@@ -18,18 +18,18 @@ class MovieAdapter(
     inner class MovieHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         fun bind(movie: Movie) {
-            itemView.apply {
-                findViewById<TextView>(R.id.movie_title).text = movie.title
-                findViewById<TextView>(R.id.movie_title_original).text = movie.originalTitle
+            itemView.also { iv ->
+                movie.apply {
+                    iv.findViewById<TextView>(R.id.movie_title).text = title
+                    iv.findViewById<TextView>(R.id.movie_title_original).text = originalTitle
+                    iv.findViewById<TextView>(R.id.movie_vote_average).text = "$voteAverage"
 
-                findViewById<TextView>(R.id.movie_release_date).text = movie
-                    .releaseDate
-                    .convertToHumanDate()
-                    .let { "Релиз: $it" }
+                    iv.findViewById<TextView>(R.id.movie_release_date).text = releaseDate
+                        .convertToHumanDate()
+                        .let { "Релиз: $it" }
 
-                findViewById<TextView>(R.id.movie_vote_average).text = "${movie.voteAverage}"
-
-                setOnClickListener { callbacks?.onMovieSelected(movie.id) }
+                    iv.setOnClickListener { callbacks?.onMovieSelected(id) }
+                }
             }
         }
     }
