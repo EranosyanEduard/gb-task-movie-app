@@ -3,11 +3,14 @@ package com.example.gb_my_app.ui.view
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gb_my_app.R
 import com.example.gb_my_app.model.Movie
+import com.example.gb_my_app.repository.RemoteDataSource
 import com.example.gb_my_app.utils.convertToHumanDate
+import com.example.gb_my_app.utils.setTextToView
+import com.squareup.picasso.Picasso
 
 class MovieAdapter(
     private val movieList: List<Movie>,
@@ -18,19 +21,24 @@ class MovieAdapter(
     inner class MovieHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         fun bind(movie: Movie) {
-            itemView.also { iv ->
-                movie.apply {
-                    iv.findViewById<TextView>(R.id.movie_title).text = title
-                    iv.findViewById<TextView>(R.id.movie_title_original).text = originalTitle
-                    iv.findViewById<TextView>(R.id.movie_vote_average).text = "$voteAverage"
+            movie.apply {
+                val mapOfTextViewIdAndText: Map<Int, String> = mapOf(
+                    R.id.movie_title to title,
+                    R.id.movie_title_original to originalTitle,
+                    R.id.movie_vote_average to voteAverage.toString(),
+                    R.id.movie_release_date to releaseDate.convertToHumanDate().let { "Релиз: $it" }
+                )
 
-                    iv.findViewById<TextView>(R.id.movie_release_date).text = releaseDate
-                        .convertToHumanDate()
-                        .let { "Релиз: $it" }
-
-                    iv.setOnClickListener { callbacks?.onMovieSelected(id) }
+                mapOfTextViewIdAndText.forEach { (resourceId, text) ->
+                    itemView.setTextToView(resourceId, text)
                 }
+
+                itemView.setOnClickListener { callbacks?.onSelectMovie(id) }
             }
+        }
+
+        fun bindImage(lambda: (imageView: ImageView) -> Unit) {
+            lambda(itemView.findViewById(R.id.movie_image))
         }
     }
 
@@ -46,7 +54,9 @@ class MovieAdapter(
 
     override fun onBindViewHolder(holder: MovieHolder, position: Int) {
         val currentMovie: Movie = movieList[position]
+        val fullImageUrl = "${RemoteDataSource.UrlEnum.Image.url}/${currentMovie.posterPath}"
 
         holder.bind(currentMovie)
+        holder.bindImage { imageView -> Picasso.get().load(fullImageUrl).into(imageView) }
     }
 }

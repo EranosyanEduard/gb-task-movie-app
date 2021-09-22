@@ -22,7 +22,7 @@
         android:layout_height="@dimen/main_fragment_li_height"
         android:background="@color/design_default_color_secondary"
         android:contentDescription="@string/movie_image_content_description"
-        android:scaleType="fitCenter"
+        android:scaleType="fitXY"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

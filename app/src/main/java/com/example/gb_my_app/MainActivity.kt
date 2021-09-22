@@ -26,11 +26,11 @@ class MainActivity : AppCompatActivity(), MainFragment.Callbacks {
     }
 
     /**
-     * Handle click on movie list item.
+     * Обработать событие "клик" по элементу списка.
      *
-     * @param movieID movie identifier.
+     * @param movieID идентификатор фильма.
      */
-    override fun onMovieSelected(movieID: Int) {
+    override fun onSelectMovie(movieID: Int) {
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.container, MovieFragment.newInstance(movieID))

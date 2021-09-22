@@ -9,10 +9,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.gb_my_app.AppState
 import com.example.gb_my_app.databinding.MovieFragmentBinding
+import com.example.gb_my_app.repository.RemoteDataSource
 import com.example.gb_my_app.utils.convertToHumanDate
-import com.example.gb_my_app.utils.showReloadAction
+import com.example.gb_my_app.utils.showSnackbar
 import com.example.gb_my_app.utils.toVisibility
-import com.google.android.material.snackbar.Snackbar
+import com.example.gb_my_app.view_model.MovieViewModel
+import com.squareup.picasso.Picasso
 
 private const val ARG_MOVIE_ID = "MOVIE_ID"
 
@@ -49,7 +51,12 @@ class MovieFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        // Here context is activity. Get access to activity functions.
+
+        /**
+         * Переопределить свойство callbacks. В данном случае context-ом является
+         * активити, что позволяет нам получить доступ к ее реализации интерфейса
+         * Callbacks.
+         */
         callbacks = context as MainFragment.Callbacks
     }
 
@@ -65,11 +72,12 @@ class MovieFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel
-            .getMovieLiveData()
-            .observe(viewLifecycleOwner, { updateUI(it) })
-
-        viewModel.getMovie(viewLifecycleOwner, paramMovieID)
+        /**
+         * Воспользоваться публичными интерфейсами, которые предоставляет ViewModel
+         * для извлечения данных и контроля за состоянием таких данных.
+         */
+        viewModel.movieLiveData.observe(viewLifecycleOwner, { appState -> render(appState) })
+        viewModel.getMovieById(paramMovieID)
     }
 
     override fun onDetach() {
@@ -82,18 +90,24 @@ class MovieFragment : Fragment() {
         viewBindingRef = null
     }
 
-    private fun updateUI(appState: AppState) {
+    /**
+     * Выполнить рендер фрагмента, руководствуясь состоянием приложения [appState].
+     *
+     * @param appState актуальное состояние приложения.
+     */
+    private fun render(appState: AppState) {
         when (appState) {
             is AppState.Failure -> viewBinding.also { vb ->
                 callbacks?.onShowProgress(View.INVISIBLE)
 
-                Snackbar
-                    .make(vb.movieContainer, "Ошибка", Snackbar.LENGTH_INDEFINITE)
-                    .showReloadAction { viewModel.getMovie(viewLifecycleOwner, paramMovieID) }
+                vb.movieContainer.showSnackbar("Ошибка") {
+                    viewModel.getMovieById(paramMovieID)
+                }
             }
             is AppState.Loading -> callbacks?.onShowProgress(View.VISIBLE)
             is AppState.Success -> viewBinding.also { vb ->
                 val movie = (appState as AppState.MovieFetched).movie
+                val fullImageUrl = "${RemoteDataSource.UrlEnum.Image.url}/${movie.posterPath}"
 
                 movie.apply {
                     vb.movieTitle.text = title
@@ -105,6 +119,8 @@ class MovieFragment : Fragment() {
 
                 callbacks?.onShowProgress(View.INVISIBLE)
                 vb.movieContainer toVisibility View.VISIBLE
+
+                Picasso.get().load(fullImageUrl).into(vb.movieImage)
             }
         }
     }

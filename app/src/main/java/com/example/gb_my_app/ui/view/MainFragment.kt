@@ -9,19 +9,18 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.gb_my_app.AppState
 import com.example.gb_my_app.databinding.MainFragmentBinding
-import com.example.gb_my_app.utils.showReloadAction
+import com.example.gb_my_app.utils.showSnackbar
 import com.example.gb_my_app.utils.toVisibility
-import com.example.gb_my_app.viewmodel.MainViewModel
-import com.google.android.material.snackbar.Snackbar
+import com.example.gb_my_app.view_model.MainViewModel
 
 class MainFragment : Fragment() {
 
     /**
-     * Use interface to pass "event" click from fragment to host-activity.
+     * Использовать интерфейс для организации взаимодействия между интерфейсом
+     * хост-активити и фрагмента.
      */
     interface Callbacks {
-        fun onMovieSelected(movieID: Int)
-
+        fun onSelectMovie(movieID: Int)
         fun onShowProgress(visibilityMode: Int)
     }
 
@@ -35,14 +34,19 @@ class MainFragment : Fragment() {
 
     private var callbacks: Callbacks? = null
 
-    // View binding.
+    // View binding
     private var viewBindingRef: MainFragmentBinding? = null
 
     private val viewBinding get() = viewBindingRef!!
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        // Here context is activity. Get access to activity functions.
+
+        /**
+         * Переопределить свойство callbacks. В данном случае context-ом является
+         * активити, что позволяет нам получить доступ к ее реализации интерфейса
+         * Callbacks.
+         */
         callbacks = context as Callbacks
     }
 
@@ -58,11 +62,12 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel
-            .getMovieListLiveData()
-            .observe(viewLifecycleOwner, { renderUI(it) })
-
-        viewModel.getMovieList(viewLifecycleOwner)
+        /**
+         * Воспользоваться публичными интерфейсами, которые предоставляет ViewModel
+         * для извлечения данных и контроля за состоянием таких данных.
+         */
+        viewModel.movieListLiveData.observe(viewLifecycleOwner) { appState -> render(appState) }
+        viewModel.getMovieListNowPlaying()
     }
 
     override fun onDetach() {
@@ -75,14 +80,19 @@ class MainFragment : Fragment() {
         viewBindingRef = null
     }
 
-    private fun renderUI(appState: AppState) {
+    /**
+     * Выполнить рендер фрагмента, руководствуясь состоянием приложения [appState].
+     *
+     * @param appState актуальное состояние приложения.
+     */
+    private fun render(appState: AppState) {
         when (appState) {
             is AppState.Failure -> viewBinding.also { vb ->
                 callbacks?.onShowProgress(View.INVISIBLE)
 
-                Snackbar
-                    .make(vb.main, "Ошибка", Snackbar.LENGTH_INDEFINITE)
-                    .showReloadAction { viewModel.getMovieList(viewLifecycleOwner) }
+                vb.main.showSnackbar("Ошибка") {
+                    viewModel.getMovieListNowPlaying()
+                }
             }
             is AppState.Loading -> callbacks?.onShowProgress(View.VISIBLE)
             is AppState.Success -> viewBinding.also { vb ->

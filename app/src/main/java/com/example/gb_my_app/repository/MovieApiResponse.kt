@@ -1,11 +1,11 @@
-package com.example.gb_my_app.api
+package com.example.gb_my_app.repository
 
 import com.example.gb_my_app.model.Movie
 import com.google.gson.annotations.SerializedName
 
-sealed class AppApiResponse {
+sealed class MovieApiResponse {
 
-    class FetchMovieListNowPlaying : AppApiResponse() {
+    class MovieListNowPlaying : MovieApiResponse() {
         @SerializedName("results")
         lateinit var movieList: List<Movie>
     }
