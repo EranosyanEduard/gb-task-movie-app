@@ -3,10 +3,19 @@
 
     <!--  My strings  -->
 
+    <!--  Menu  -->
+    <string name="settings_title_for_menu">Настройки</string>
+
     <!--  Icons  -->
     <string name="icon_star">Иконка "Рейтинг"</string>
 
     <!--  Main fragment  -->
     <string name="title_for_main_fragment">Сейчас в кино</string>
     <string name="movie_image_content_description">Постер фильма</string>
+
+    <!--  Settings fragment  -->
+    <string name="title_for_settings_fragment">Настройки</string>
+    <string name="item_label_1_for_settings_fragment">
+        Исключить доступ к взрослому контенту
+    </string>
 </resources>

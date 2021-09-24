@@ -2,6 +2,7 @@ package com.example.gb_my_app.ui.view
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,8 @@ import com.example.gb_my_app.databinding.MainFragmentBinding
 import com.example.gb_my_app.utils.showSnackbar
 import com.example.gb_my_app.utils.toVisibility
 import com.example.gb_my_app.view_model.MainViewModel
+
+const val ALLOW_ADULT_CONTENT = "ALLOW_ADULT_CONTENT"
 
 class MainFragment : Fragment() {
 
@@ -38,6 +41,8 @@ class MainFragment : Fragment() {
     private var viewBindingRef: MainFragmentBinding? = null
 
     private val viewBinding get() = viewBindingRef!!
+
+    private var allowAdultContent = true
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -67,6 +72,7 @@ class MainFragment : Fragment() {
          * для извлечения данных и контроля за состоянием таких данных.
          */
         viewModel.movieListLiveData.observe(viewLifecycleOwner) { appState -> render(appState) }
+        handleSharedPreferences()
         viewModel.getMovieListNowPlaying()
     }
 
@@ -78,6 +84,13 @@ class MainFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         viewBindingRef = null
+    }
+
+    private fun handleSharedPreferences() {
+        activity?.also {
+            allowAdultContent = it.getPreferences(Context.MODE_PRIVATE)
+                .getBoolean(ALLOW_ADULT_CONTENT, true)
+        }
     }
 
     /**
@@ -98,7 +111,15 @@ class MainFragment : Fragment() {
             is AppState.Success -> viewBinding.also { vb ->
                 val movieList = (appState as AppState.MovieListFetched).movieList
 
-                vb.movieRecyclerView.adapter = MovieAdapter(movieList, callbacks)
+                Log.i("foobarbaz",allowAdultContent.toString())
+                // Отфильтровать массив фильмов, руководствуясь значением allowAdultContent
+                val filteredMovieList = if (allowAdultContent) {
+                    movieList
+                } else {
+                    movieList.filter { !it.adult }
+                }
+
+                vb.movieRecyclerView.adapter = MovieAdapter(filteredMovieList, callbacks)
 
                 callbacks?.onShowProgress(View.INVISIBLE)
                 vb.main toVisibility View.VISIBLE

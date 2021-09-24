@@ -44,7 +44,9 @@ class MainViewModel : ViewModel() {
     /**
      * Извлечь список фильмов из удаленного источника (публичный интерфейс).
      */
-    fun getMovieListNowPlaying() = getMovieListNowPlayingFromRepository()
+    fun getMovieListNowPlaying() {
+        getMovieListNowPlayingFromRepository()
+    }
 
     private fun getMovieListNowPlayingFromRepository() {
         movieListLiveData.value = AppState.Loading
