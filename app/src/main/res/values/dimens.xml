@@ -12,4 +12,7 @@
     <dimen name="main_fragment_li_height">160dp</dimen>
     <dimen name="main_fragment_li_img_width">120dp</dimen>
     <dimen name="main_fragment_li_guideline">136dp</dimen>
+
+    <!--  Movie fragment  -->
+    <dimen name="movie_fragment_overview_container_height">250dp</dimen>
 </resources>

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.example.gb_my_app.AppState
 import com.example.gb_my_app.model.Movie
 import com.example.gb_my_app.model.RepositoryImpl
+import com.example.gb_my_app.model.db.MovieEntity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -40,6 +41,11 @@ class MovieViewModel : ViewModel() {
             movieLiveData.postValue(AppState.Failure(t))
         }
     }
+
+    /**
+     * Добавить фильм в базу данных приложения (публичный интерфейс).
+     */
+    fun addMovie(movie: MovieEntity) = repository.addMovie(movie)
 
     /**
      * Извлечь подробную информцию о фильме по его идентификатору (публичный интерфейс).

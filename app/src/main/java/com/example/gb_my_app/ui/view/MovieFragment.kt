@@ -5,14 +5,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.gb_my_app.AppState
 import com.example.gb_my_app.databinding.MovieFragmentBinding
 import com.example.gb_my_app.repository.RemoteDataSource
-import com.example.gb_my_app.utils.convertToHumanDate
-import com.example.gb_my_app.utils.showSnackbar
-import com.example.gb_my_app.utils.toVisibility
+import com.example.gb_my_app.utils.*
 import com.example.gb_my_app.view_model.MovieViewModel
 import com.squareup.picasso.Picasso
 
@@ -109,12 +108,31 @@ class MovieFragment : Fragment() {
                 val movie = (appState as AppState.MovieFetched).movie
                 val fullImageUrl = "${RemoteDataSource.UrlEnum.Image.url}/${movie.posterPath}"
 
-                movie.apply {
-                    vb.movieTitle.text = title
-                    vb.movieTitleOriginal.text = originalTitle
-                    vb.movieVoteAverage.text = "$voteAverage"
-                    vb.movieOverview.text = overview
-                    vb.movieReleaseDate.text = releaseDate.convertToHumanDate().let { "Релиз: $it" }
+                movie.also { m ->
+                    vb.movieTitle.text = m.title
+                    vb.movieTitleOriginal.text = m.originalTitle
+                    vb.movieVoteAverage.text = "${m.voteAverage}"
+                    vb.movieOverview.text = m.overview
+                    vb.movieReleaseDate.text =
+                        m.releaseDate.convertToHumanDate().let { "Релиз: $it" }
+
+                    // Установить "прослушку" на кнопку "добавить комментарий"
+                    vb.buttonAddComment.setOnClickListener {
+                        val commentToMovie = vb.movieUserComment.editText?.text.toString()
+                        val movieEntity = m.toEntity(commentToMovie, fullImageUrl)
+
+                        viewModel.addMovie(movieEntity)
+                    }
+                }
+
+                /*
+                * Установить простую валидацию формы, блокируя кнопку "Добавить комментарий",
+                * если поле ввода является пустым
+                */
+                vb.movieUserComment.editText?.also { et ->
+                    et.doOnTextChanged { text, _, _, _ ->
+                        vb.buttonAddComment toIsEnabled text.toString()
+                    }
                 }
 
                 callbacks?.onShowProgress(View.INVISIBLE)

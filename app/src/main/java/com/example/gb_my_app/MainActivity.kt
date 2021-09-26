@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import com.example.gb_my_app.ui.view.CommentedMovieFragment
 import com.example.gb_my_app.ui.view.MainFragment
 import com.example.gb_my_app.ui.view.MovieFragment
 import com.example.gb_my_app.ui.view.SettingsFragment
@@ -44,18 +45,25 @@ class MainActivity : AppCompatActivity(), SharedPreferencesCallbacks, MainFragme
      * Обработать выбор элемента меню на основной панели приложения.
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        // Вернуть логическое значение: true - завершить обработку, false - продолжить
+        // обработку, например, в "дочерних" фрагментах
+        R.id.menu_item_account -> {
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.container, CommentedMovieFragment.newInstance())
+                .addToBackStack(null)
+                .commitAllowingStateLoss()
+            true
+        }
         R.id.menu_item_app_settings -> {
             supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.container, SettingsFragment.newInstance())
                 .addToBackStack(null)
                 .commitAllowingStateLoss()
-
-            // Вернуть логическое значение: true - завершить обработку, false - продолжить
-            // обработку, например, в "дочерних" фрагментах
             true
         }
-        else                        -> super.onOptionsItemSelected(item)
+        else -> super.onOptionsItemSelected(item)
     }
 
     /**

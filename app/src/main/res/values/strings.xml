@@ -5,6 +5,7 @@
 
     <!--  Menu  -->
     <string name="settings_title_for_menu">Настройки</string>
+    <string name="account_title_for_menu">Аккаунт</string>
 
     <!--  Icons  -->
     <string name="icon_star">Иконка "Рейтинг"</string>
@@ -12,6 +13,13 @@
     <!--  Main fragment  -->
     <string name="title_for_main_fragment">Сейчас в кино</string>
     <string name="movie_image_content_description">Постер фильма</string>
+
+    <!--  Movie fragment  -->
+    <string name="button_text_for_movie_fragment">Сохранить</string>
+    <string name="input_comment_hint_for_movie_fragment">Комментарий</string>
+
+    <!--  Commented movie fragment  -->
+    <string name="title_for_commented_movie_fragment">Пользовательская коллекция</string>
 
     <!--  Settings fragment  -->
     <string name="title_for_settings_fragment">Настройки</string>

@@ -7,18 +7,14 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gb_my_app.R
 import com.example.gb_my_app.model.Movie
-import com.example.gb_my_app.repository.RemoteDataSource
 import com.example.gb_my_app.utils.convertToHumanDate
 import com.example.gb_my_app.utils.setTextToView
 import com.squareup.picasso.Picasso
 
-class MovieAdapter(
-    private val movieList: List<Movie>,
-    private val callbacks: MainFragment.Callbacks?,
+class CommentedMovieAdapter(private val movieList: List<Movie>) :
+    RecyclerView.Adapter<CommentedMovieAdapter.CommentedMovieHolder>() {
 
-    ) : RecyclerView.Adapter<MovieAdapter.MovieHolder>() {
-
-    inner class MovieHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class CommentedMovieHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         fun bind(movie: Movie) {
             movie.apply {
@@ -26,14 +22,14 @@ class MovieAdapter(
                     R.id.movie_title to title,
                     R.id.movie_title_original to originalTitle,
                     R.id.movie_vote_average to voteAverage.toString(),
+                    R.id.movie_overview to overview,
+                    R.id.movie_user_comment to userComment,
                     R.id.movie_release_date to releaseDate.convertToHumanDate().let { "Релиз: $it" }
                 )
 
                 mapOfTextViewIdAndText.forEach { (resourceId, text) ->
                     itemView.setTextToView(resourceId, text)
                 }
-
-                itemView.setOnClickListener { callbacks?.onSelectMovie(id) }
             }
         }
 
@@ -41,21 +37,20 @@ class MovieAdapter(
             cb(itemView.findViewById(R.id.movie_image))
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentedMovieHolder {
         val view: View = LayoutInflater
             .from(parent.context)
-            .inflate(R.layout.main_fragment_list_item, parent, false)
+            .inflate(R.layout.commented_movie_fragment_list_item, parent, false)
 
-        return MovieHolder(view)
+        return CommentedMovieHolder(view)
     }
 
-    override fun onBindViewHolder(holder: MovieHolder, position: Int) {
+    override fun onBindViewHolder(holder: CommentedMovieHolder, position: Int) {
         val currentMovie: Movie = movieList[position]
-        val fullImageUrl = "${RemoteDataSource.UrlEnum.Image.url}/${currentMovie.posterPath}"
 
         holder.bind(currentMovie)
         holder.bindImage { imageView: ImageView ->
-            Picasso.get().load(fullImageUrl).into(imageView)
+            Picasso.get().load(currentMovie.posterPath).into(imageView)
         }
     }
 

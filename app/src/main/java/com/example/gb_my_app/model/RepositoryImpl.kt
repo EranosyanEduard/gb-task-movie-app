@@ -1,6 +1,9 @@
 package com.example.gb_my_app.model
 
 import android.content.Context
+import androidx.lifecycle.LiveData
+import com.example.gb_my_app.model.db.MovieEntity
+import com.example.gb_my_app.repository.LocalDataSource
 import com.example.gb_my_app.repository.MovieApiResponse
 import com.example.gb_my_app.repository.RemoteDataSource
 import retrofit2.Callback
@@ -29,7 +32,15 @@ class RepositoryImpl private constructor(context: Context) : Repository {
         fun getInstance() = instance ?: throw Exception(EXCEPTION_MESSAGE)
     }
 
+    private val localDataSource = LocalDataSource(context)
     private val remoteDataSource = RemoteDataSource()
+
+    override fun addMovie(movie: MovieEntity) {
+        localDataSource.addMovie(movie)
+    }
+
+    override fun getMovieListCommented(): LiveData<List<MovieEntity>> =
+        localDataSource.fetchMovieListCommented()
 
     override fun getMovieListNowPlaying(cb: Callback<MovieApiResponse.MovieListNowPlaying>) {
         remoteDataSource.fetchMovieListNowPlaying(cb)

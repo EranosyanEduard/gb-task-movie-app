@@ -20,6 +20,8 @@ data class Movie(
 
     val title: String = "Название",
 
+    val userComment: String = "",
+
     @SerializedName("vote_average")
     val voteAverage: Double = .0,
 )
