@@ -3,9 +3,9 @@ package com.example.gb_my_app.view_model
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.gb_my_app.AppState
+import com.example.gb_my_app.api_client.MovieApiResponse
 import com.example.gb_my_app.model.Movie
 import com.example.gb_my_app.model.RepositoryImpl
-import com.example.gb_my_app.repository.MovieApiResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

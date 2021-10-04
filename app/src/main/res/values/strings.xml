@@ -7,12 +7,20 @@
     <string name="settings_title_for_menu">Настройки</string>
     <string name="account_title_for_menu">Аккаунт</string>
 
+    <string name="home_title_for_bottom_nav_menu">Главная</string>
+    <string name="actors_title_for_bottom_nav_menu">Актеры</string>
+
     <!--  Icons  -->
     <string name="icon_star">Иконка "Рейтинг"</string>
 
     <!--  Main fragment  -->
     <string name="title_for_main_fragment">Сейчас в кино</string>
     <string name="movie_image_content_description">Постер фильма</string>
+
+    <!--  Actors fragment  -->
+    <string name="title_for_actors_fragment">Список полулярных актеров</string>
+    <string name="actor_name_label">Актер</string>
+    <string name="actor_popularity_label">Популярность</string>
 
     <!--  Movie fragment  -->
     <string name="button_text_for_movie_fragment">Сохранить</string>

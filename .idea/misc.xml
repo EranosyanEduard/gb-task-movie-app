@@ -7,6 +7,9 @@
         <entry key="..\:/Users/eddie/AndroidStudioProjects/GBMyApp/app/src/main/res/layout/main_fragment_list_item.xml" value="0.1" />
         <entry key="..\:/Users/eddie/AndroidStudioProjects/GBMyApp/app/src/main/res/layout/main_fragment_movie_as_list_item.xml" value="0.2848731884057971" />
         <entry key="..\:/Users/eddie/AndroidStudioProjects/GBMyApp/app/src/main/res/layout/movie_fragment.xml" value="0.25" />
+        <entry key="..\:/Users/eddie/AndroidStudioProjects/gb-task-movie-app/app/src/main/res/layout/actor_fragment.xml" value="0.1037037037037037" />
+        <entry key="..\:/Users/eddie/AndroidStudioProjects/gb-task-movie-app/app/src/main/res/layout/actors_fragment.xml" value="0.10277777777777777" />
+        <entry key="..\:/Users/eddie/AndroidStudioProjects/gb-task-movie-app/app/src/main/res/layout/actors_fragment_list_item.xml" value="0.33" />
         <entry key="..\:/Users/eddie/AndroidStudioProjects/gb-task-movie-app/app/src/main/res/layout/commented_fragment_list_item.xml" value="0.19579533941236069" />
         <entry key="..\:/Users/eddie/AndroidStudioProjects/gb-task-movie-app/app/src/main/res/layout/fragment_settings.xml" value="0.1" />
         <entry key="..\:/Users/eddie/AndroidStudioProjects/gb-task-movie-app/app/src/main/res/layout/main_activity.xml" value="0.19579533941236069" />
@@ -14,6 +17,7 @@
         <entry key="..\:/Users/eddie/AndroidStudioProjects/gb-task-movie-app/app/src/main/res/layout/main_fragment_list_item.xml" value="0.2558876811594203" />
         <entry key="..\:/Users/eddie/AndroidStudioProjects/gb-task-movie-app/app/src/main/res/layout/movie_fragment.xml" value="0.1" />
         <entry key="..\:/Users/eddie/AndroidStudioProjects/gb-task-movie-app/app/src/main/res/layout/settings_fragment.xml" value="0.1" />
+        <entry key="..\:/Users/eddie/AndroidStudioProjects/gb-task-movie-app/app/src/main/res/menu/bottom_nav_menu.xml" value="0.40260416666666665" />
         <entry key="..\:/Users/eddie/AndroidStudioProjects/gb-task-movie-app/app/src/main/res/menu/main_screen_menu.xml" value="0.33" />
         <entry key="..\:/Users/eddie/AndroidStudioProjects/gb-task-movie-app/app/src/main/res/menu/menu.xml" value="0.40260416666666665" />
       </map>

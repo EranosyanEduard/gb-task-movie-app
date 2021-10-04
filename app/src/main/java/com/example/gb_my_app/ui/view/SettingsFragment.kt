@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.gb_my_app.SharedPreferencesCallbacks
 import com.example.gb_my_app.databinding.SettingsFragmentBinding
+import com.example.gb_my_app.view_model.SettingsViewModel
 
 class SettingsFragment : Fragment() {
 

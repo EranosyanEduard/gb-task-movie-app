@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/page_home"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_home_24"
+        android:title="@string/home_title_for_bottom_nav_menu" />
+
+    <item
+        android:id="@+id/page_actors"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_recent_actors_24"
+        android:title="@string/actors_title_for_bottom_nav_menu" />
+
+</menu>

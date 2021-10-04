@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gb_my_app.R
+import com.example.gb_my_app.api_client.RemoteDataSource
 import com.example.gb_my_app.model.Movie
-import com.example.gb_my_app.repository.RemoteDataSource
 import com.example.gb_my_app.utils.convertToHumanDate
 import com.example.gb_my_app.utils.setTextToView
 import com.squareup.picasso.Picasso

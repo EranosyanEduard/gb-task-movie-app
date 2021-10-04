@@ -1,4 +1,4 @@
-package com.example.gb_my_app.repository
+package com.example.gb_my_app.api_client
 
 import com.example.gb_my_app.model.Movie
 import com.google.gson.annotations.SerializedName

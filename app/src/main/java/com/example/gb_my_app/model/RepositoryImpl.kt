@@ -2,10 +2,11 @@ package com.example.gb_my_app.model
 
 import android.content.Context
 import androidx.lifecycle.LiveData
+import com.example.gb_my_app.api_client.ActorApiResponse
+import com.example.gb_my_app.api_client.LocalDataSource
+import com.example.gb_my_app.api_client.MovieApiResponse
+import com.example.gb_my_app.api_client.RemoteDataSource
 import com.example.gb_my_app.model.db.MovieEntity
-import com.example.gb_my_app.repository.LocalDataSource
-import com.example.gb_my_app.repository.MovieApiResponse
-import com.example.gb_my_app.repository.RemoteDataSource
 import retrofit2.Callback
 
 private const val EXCEPTION_MESSAGE = "Создайте репозиторий, вызвав метод create"
@@ -37,6 +38,14 @@ class RepositoryImpl private constructor(context: Context) : Repository {
 
     override fun addMovie(movie: MovieEntity) {
         localDataSource.addMovie(movie)
+    }
+
+    override fun getActorListPopular(cb: Callback<ActorApiResponse.ActorListPopular>) {
+        remoteDataSource.fetchActorListPopular(cb)
+    }
+
+    override fun getActorById(actorId: Int, cb: Callback<Actor>) {
+        remoteDataSource.fetchActorById(actorId, cb)
     }
 
     override fun getMovieListCommented(): LiveData<List<MovieEntity>> =

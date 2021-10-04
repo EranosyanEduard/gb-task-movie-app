@@ -5,11 +5,9 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import com.example.gb_my_app.ui.view.CommentedMovieFragment
-import com.example.gb_my_app.ui.view.MainFragment
-import com.example.gb_my_app.ui.view.MovieFragment
-import com.example.gb_my_app.ui.view.SettingsFragment
+import com.example.gb_my_app.ui.view.*
 import com.example.gb_my_app.utils.toVisibility
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.progressindicator.LinearProgressIndicator
 
 interface SharedPreferencesCallbacks {
@@ -17,7 +15,8 @@ interface SharedPreferencesCallbacks {
     fun getBooleanPreference(key: String, defaultValue: Boolean): Boolean
 }
 
-class MainActivity : AppCompatActivity(), SharedPreferencesCallbacks, MainFragment.Callbacks {
+class MainActivity : AppCompatActivity(), SharedPreferencesCallbacks, MainFragment.Callbacks,
+    ActorsFragment.Callbacks {
 
     private val progressIndicator: LinearProgressIndicator by lazy {
         findViewById(R.id.progress_indicator)
@@ -26,6 +25,8 @@ class MainActivity : AppCompatActivity(), SharedPreferencesCallbacks, MainFragme
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
+
+        addNavItemSelectedEventListener()
 
         if (savedInstanceState == null) {
             supportFragmentManager
@@ -67,6 +68,33 @@ class MainActivity : AppCompatActivity(), SharedPreferencesCallbacks, MainFragme
     }
 
     /**
+     * Обработать выбор элемента навигационного меню в подвале активити.
+     */
+    private fun addNavItemSelectedEventListener() {
+        val navMenu: BottomNavigationView = findViewById(R.id.bottom_nav_menu)
+
+        navMenu.setOnNavigationItemSelectedListener { item: MenuItem ->
+            when (item.itemId) {
+                R.id.page_home -> {
+                    supportFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.container, MainFragment.newInstance())
+                        .commitAllowingStateLoss()
+                    true
+                }
+                R.id.page_actors -> {
+                    supportFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.container, ActorsFragment.newInstance())
+                        .commitAllowingStateLoss()
+                    true
+                }
+                else -> false
+            }
+        }
+    }
+
+    /**
      * Редактировать shared preferences логического типа.
      *
      * @param key ключ, который позволит извлекать значение [value].
@@ -83,7 +111,20 @@ class MainActivity : AppCompatActivity(), SharedPreferencesCallbacks, MainFragme
         this.getPreferences(Context.MODE_PRIVATE).getBoolean(key, defaultValue)
 
     /**
-     * Обработать событие "клик" по элементу списка.
+     * Обработать событие "клик" по элементу списка актеров.
+     *
+     * @param actorId идентификатор актера.
+     */
+    override fun onSelectActor(actorId: Int) {
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.container, ActorFragment.newInstance(actorId))
+            .addToBackStack(null)
+            .commit()
+    }
+
+    /**
+     * Обработать событие "клик" по элементу списка фильмов.
      *
      * @param movieID идентификатор фильма.
      */

@@ -1,4 +1,4 @@
-package com.example.gb_my_app.repository
+package com.example.gb_my_app.api_client
 
 import android.content.Context
 import androidx.lifecycle.LiveData

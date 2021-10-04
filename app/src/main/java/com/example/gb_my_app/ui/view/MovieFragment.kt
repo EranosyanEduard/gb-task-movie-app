@@ -9,8 +9,8 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.gb_my_app.AppState
+import com.example.gb_my_app.api_client.RemoteDataSource
 import com.example.gb_my_app.databinding.MovieFragmentBinding
-import com.example.gb_my_app.repository.RemoteDataSource
 import com.example.gb_my_app.utils.*
 import com.example.gb_my_app.view_model.MovieViewModel
 import com.squareup.picasso.Picasso
