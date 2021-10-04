@@ -28,4 +28,6 @@
         android:text=""
         tools:text="Популярность" />
 
+    <!--  Добавить карту во фрагмент  -->
+    <include layout="@layout/fragment_maps" />
 </LinearLayout>
